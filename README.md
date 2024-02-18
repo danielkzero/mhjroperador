@@ -1,24 +1,28 @@
-# mhjroperador
+# MHJ PARA ROPERADORES
 
-## Project setup
+## Instalação
+
+Para iniciar a aplicação, siga estas etapas:
+
+1. Certifique-se de ter todas as recomendações iniciais para um projeto vue.
+2. Clone este repositório em seu ambiente de desenvolvimento.
+3. Instale as dependências executando o comando:
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Inicie o servidor de desenvolvimento
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compile e compacte para o ambiente de produção
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Análise de erros
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
