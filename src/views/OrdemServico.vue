@@ -28,19 +28,23 @@
         
         <div v-for="(row, i) in listaOSAberto" :key="i" class="card my-2 p-3">          
           <div class="row">
-            <div class="col-sm-3 col-3">
+            <div class="col-sm-2 col-2">
               <div><small class="text-muted">ordem de serviço</small></div>
               {{ row.id_ordem_servico }}
             </div>
-            <div class="col-sm-3 col-3">
+            <div class="col-sm-4 col-4">
+              <div><small class="text-muted">{{ row.codigo_produto }}</small></div>
+              {{ row.produto }}
+            </div>
+            <div class="col-sm-2 col-2">
               <div><small class="text-muted">colaborador</small></div>
               {{ row.id_usuario }} - {{ row.nome }}
             </div>
-            <div class="col-sm-3 col-3">
+            <div class="col-sm-2 col-2">
               <div><small class="text-muted">cadastrado em</small></div>
               {{ formatData(row.data) }}
             </div>
-            <div class="col-sm-3 col-3">
+            <div class="col-sm-2 col-2">
               <div class="d-grid gap-2">
                 <a :href="'/registro-de-operacao?id='+row.id_ordem_servico" class="btn btn-primary btn-lg" type="button">Fechar OS</a>
               </div>

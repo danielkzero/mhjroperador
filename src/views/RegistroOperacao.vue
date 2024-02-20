@@ -218,11 +218,6 @@ export default defineComponent({
           return true;
         }
 
-        if (this.Tquantidade == 0 && id != null) {
-          alert("Coloque uma quantidade");
-          return true;
-        }
-
         const requestData = {
           id_ordem_servico: id_ordem_servico,
           id_equipamento: this.Tid_equipamento,
