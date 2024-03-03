@@ -75,10 +75,10 @@
             <div class="col-sm-4">
               <div class="mb-3">
                 <label for="centro_trabalho">Equipamento</label>
-                <select v-model="Tid_equipamento" class="form-select text-bg-warning" 
-                  name="centro_trabalho" id="centro_trabalho" required>
+                <select v-model="Tid_equipamento" class="form-select" :class="disabled == 0 ? 'text-bg-secondary' : 'text-bg-warning'"
+                  name="centro_trabalho" id="centro_trabalho" :disabled="disabled == 0" :required="disabled == 0">
                   <option v-if="Tid_equipamento === null" selected disabled value="null">Selecione um equipamento</option>
-                  <option v-for="(item, index) in equipamentoData" :key="index" :value="item.id">{{ item.nome }}</option>
+                  <option v-for="(item, index) in equipamentoData" :key="index" :value="item.id">{{ item.id }} - {{ item.nome }}</option>
                 </select>
               </div>
             </div>
@@ -103,8 +103,12 @@
             </div>
           </div>
 
-          <div class="row mt-3">
+          <div class="row">
             <div class="col">
+              <div class="form-check form-switch d-flex justify-content-center my-2 mb-3">
+                <input class="form-check-input me-2" type="checkbox" v-model="teve_almoco" role="switch" id="teve_almoco">
+                <label class="form-check-label" for="teve_almoco"> TEVE ALMOÇO?</label>
+              </div>
               <div class="d-grid gap-2">                
                 <template v-if="!show">
                   <button type="button" name="salvar" id="salvar" @click="showModal" class="btn btn-primary">SALVAR</button>
@@ -114,7 +118,10 @@
                     <label for="id_operador" class="form-label">IDENTIFICAÇÃO DO OPERADOR</label>
                     <div class="input-group">
                       <span class="input-group-text"><i class="bx bxs-barcode bx-sm"></i></span>
-                      <input ref="idOperadorInput" v-model="Tid_usuario" type="text" id="id_operador" @keydown.enter="iniciarProcesso(operacaoData.data[0].id_historico_ordem_servico, operacaoData.data[0].id_ordem_servico)" class="form-control">
+                      <input ref="idOperadorInput" v-model="Tid_usuario" type="number" id="id_operador" min="9" max="9"
+                      pattern="[9001]{4}[0-9]{5}"
+                      @keydown.enter="iniciarProcesso(operacaoData.data[0].id_historico_ordem_servico, operacaoData.data[0].id_ordem_servico)" 
+                      class="form-control">
                     </div>
                   </div>
                 </template>
@@ -134,6 +141,7 @@
 import { useRoute } from 'vue-router';
 import { defineComponent } from 'vue';
 import axios from 'axios';
+import { VCardItem } from 'vuetify/lib/components/index.mjs';
 axios.defaults.withCredentials = false;
 export default defineComponent({
   data() {
@@ -148,7 +156,8 @@ export default defineComponent({
       Tid_equipamento: null,
       Tid_observacao: null,
       Tquantidade: 0,
-      Tid_usuario: null
+      Tid_usuario: '' as string,
+      teve_almoco: 0
     };
   },
   methods: {
@@ -166,6 +175,9 @@ export default defineComponent({
         }
         const data: any = await response.json();
         this.operacaoData = data;
+
+        console.log(data);
+
         if (data.data[0].id_historico_equipamento != null) {
           this.Tid_equipamento = data.data[0].id_historico_equipamento;
         }
@@ -208,14 +220,38 @@ export default defineComponent({
     },
     async iniciarProcesso(id: string, id_ordem_servico: string) {
       try {
+        let Idusuario = String(this.Tid_usuario);
+        //validação de quantidade de caracters igual ao padrão exigido
+        if (Idusuario.length !== 9) {
+          alert("A quantidade de caracteres não confere com o tamanho padrão!");
+          return true;
+        }
+        //validação de números iniciais em acordo com o padrão exigido
+        if (Idusuario.substring(0,4) !== '9001') {
+          alert("O início do código não corresponde ao padrão!");
+          return true;
+        }
+        //validação de número acima do zero na última posição do código
+        if (Idusuario.slice(-1) == '0') {
+          alert("Existe uma falta de correspondência com o padrão!");
+          return true;
+        }
+        //validação de equipamento selecionado
         if (this.Tid_equipamento == null) {
           alert("Selecione um equipamento!");
           return true;
         }
-
+        //validaçao de conteúdo na observação
         if (this.Tid_observacao == null && id != null) {
           alert("Selecione uma observação!");
           return true;
+        }
+        //validação de similaridade de usuário ao fechar OS.
+        if (this.operacaoData.data[0].id_usuario != null) {
+          if (this.Tid_usuario != this.operacaoData.data[0].id_usuario) {
+            alert("Essa OS precisa ser fechada pelo mesmo colaborador!");
+            return true;
+          }          
         }
 
         const requestData = {
@@ -224,7 +260,8 @@ export default defineComponent({
           id_observacao: id == null ? 1 : this.Tid_observacao,
           id_usuario: this.Tid_usuario,
           quantidade: this.Tquantidade,
-          data: new Date()
+          data: new Date(),
+          teve_almoco: this.teve_almoco
         };
         
 
