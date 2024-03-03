@@ -1,4 +1,4 @@
-# MHJ PARA ROPERADORES
+# MHJR PARA OPERADORES
 
 ## Instalação
 
