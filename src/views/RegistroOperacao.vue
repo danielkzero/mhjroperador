@@ -232,10 +232,10 @@ export default defineComponent({
           return true;
         }
         //validação de número acima do zero na última posição do código
-        if (Idusuario.slice(-1) == '0') {
+        /*if (Idusuario.slice(-1) == '0') {
           alert("Existe uma falta de correspondência com o padrão!");
           return true;
-        }
+        }*/
         //validação de equipamento selecionado
         if (this.Tid_equipamento == null) {
           alert("Selecione um equipamento!");
