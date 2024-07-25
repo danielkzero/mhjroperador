@@ -38,7 +38,7 @@
             </div>
             <div class="col-sm-2 col-2">
               <div><small class="text-muted">colaborador</small></div>
-              {{ row.id_usuario }} - {{ row.nome }}
+              {{ row.nome }}
             </div>
             <div class="col-sm-2 col-2">
               <div><small class="text-muted">cadastrado em</small></div>
